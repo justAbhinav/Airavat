@@ -215,7 +215,7 @@ export default function SendMailPage() {
       const response = await fetch("/api/generateToken", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
         },
         body: JSON.stringify(tokenData),
       })
