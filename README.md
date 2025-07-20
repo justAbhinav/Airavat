@@ -4,18 +4,25 @@
 
 ## Table of Contents
 
-- [Overview](#overview)
-- [Architecture](#architecture)
-- [Components](#components)
-- [Directory Structure](#directory-structure)
-- [Setup](#setup)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
+- [Airavat](#airavat)
+  - [Table of Contents](#table-of-contents)
+  - [Overview](#overview)
+  - [Architecture](#architecture)
+  - [Components](#components)
+  - [Directory Structure](#directory-structure)
+  - [Setup](#setup)
+  - [Usage](#usage)
+  - [Contributing](#contributing)
+  - [License](#license)
 
 ## Overview
 
 Airavat addresses the challenge of securing sensitive customer data in fintech platforms, particularly during third-party data sharing. It ensures compliance with regulations like GDPR and India's DPDP Act, minimizes data exposure, enforces usage boundaries, and fosters user trust through transparency and ethical data handling.
+
+Airavat includes two secure dashboards for real-time interaction and control:
+
+- **User Dashboard**: [https://airavat-userdash.vercel.app/](https://airavat-userdash.vercel.app/) – Allows customers to manage consent, view shared data, and monitor access history.
+- **Bank Dashboard**: [https://airavat-alpha.vercel.app/](https://airavat-alpha.vercel.app/) – Enables financial institutions to handle data requests, risk assessments, and policy enforcement.
 
 ## Architecture
 
