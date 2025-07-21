@@ -1,0 +1,365 @@
+{
+  "active": true,
+  "connections": {
+    "TMA-call-webhook": {
+      "main": [
+        [
+          {
+            "node": "cleaner",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Task master agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ZK_offerings webhook": {
+      "ai_tool": [
+        [
+          {
+            "node": "Task master agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ZK_Build webhoook": {
+      "ai_tool": [
+        [
+          {
+            "node": "Task master agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DRA_fetch webhook": {
+      "ai_tool": [
+        [
+          {
+            "node": "Task master agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "agent cleaner",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Task master agent": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "cleaner": {
+      "main": [
+        [
+          {
+            "node": "Task master agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "TMA start",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "agent cleaner": {
+      "main": [
+        [
+          {
+            "node": "to OCA",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "TMA End",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-07-05T18:32:48.860Z",
+  "id": "N6N6Bkyaq3cSqs7j",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "03_TMA_workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "TMA_delegation",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        464
+      ],
+      "id": "5d28d572-d987-4e72-a75f-d8d0f593d069",
+      "name": "TMA-call-webhook",
+      "webhookId": "7ac0d3a6-a9ed-4724-93a8-75422e7d457d"
+    },
+    {
+      "parameters": {
+        "model": "qwen3:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        672,
+        928
+      ],
+      "id": "35db5ee6-fc18-4ceb-9bd5-933cdf6d37d9",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "7K2ZWuE2XSItQQuj",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "This is the \"ZK_offerings\" webhook, this webhook needs to be pinged with a GET request to get in response the services that can be completed by the the \"Zero Knowledge system\". the response will be in the form of the response body like this :\n{ \"zk_avail\" : [...] } , the \"zk_avail\" is a list of services that are offered.",
+        "url": "http://localhost:5678/webhook/what_can_ZKA_do",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        784,
+        928
+      ],
+      "id": "3c935c0c-7e94-4078-8e94-b79a24754505",
+      "name": "ZK_offerings webhook"
+    },
+    {
+      "parameters": {
+        "toolDescription": "this is the \"ZK_Build\" webhook, you can use this tool to send a POST request to the the ZK agent to get the ZK_result. Your request body should contain all of these fields:\n{ \"data_point\": , \"user\" : , \"value\" : , \"transaction_ID\" : , \"sessionID\" : , \"source\" : }\n\nthis will get you a response like:\n{ \"user\" : \"...\" , \"zk_res\": ... } \n\n\nONLY use the \"ZK_build\" tool if the item is there not always, because it is very expensive",
+        "method": "POST",
+        "url": "http://localhost:5678/webhook/ZKA_delegation",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Content_Type', ``, 'string') }}",
+        "body": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Body', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        912,
+        928
+      ],
+      "id": "2a898e7b-431d-4d0e-a8f0-0b040561e954",
+      "name": "ZK_Build webhoook"
+    },
+    {
+      "parameters": {
+        "toolDescription": "this is the \"DRA_fetch\" webhook, you can use this tool to send a POST request to the the DRA to get the data_link token. Your request body should contain all of these fields:\n{ \"type\" : \"FETCH\",  \"data_point\": , \"user\" : , \"TTL\" : , \"transaction_ID\" : , \"sessionID\" : , \"source\" : }\n\nthis will get you a response like:\n{ \"user\" : \"...\" , \"data_token\": \"...\" }",
+        "method": "POST",
+        "url": "http://localhost:5678/webhook/final_fetch_data",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Content_Type', ``, 'string') }}",
+        "body": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Body', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        1024,
+        928
+      ],
+      "id": "c64476bc-f72e-48b3-a7d4-d151d7befbd4",
+      "name": "DRA_fetch webhook"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://airavat-alpha.vercel.app/api/user-requests",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n\"transactionID\" : \"{{ $json.body.transactionID }}\",\n\"agent\" : \"TMA\",\n\"type\" : \"execution_started\",\n\"msg\" : \"TMA recieved the complete built request from the RBA. TMA started.\",\n\"status\" : \"in-progress\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        832,
+        304
+      ],
+      "id": "c1da4828-a4d8-4d94-9276-815930df4562",
+      "name": "TMA start"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://airavat-alpha.vercel.app/api/user-requests",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n\"transactionID\" : \"{{ $json.body.transactionID }}\",\n\"agent\" : \"TMA\",\n\"type\" : \"execution_completed\",\n\"msg\" : \"The TMA has accessed the complete data. The data has been delivered to the OCA for the response\",\n\"status\" : \"in-progress\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1584,
+        288
+      ],
+      "id": "0882c2f5-e3d9-498b-a6d4-bb7f252311ab",
+      "name": "TMA End"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1232,
+        576
+      ],
+      "id": "e132548e-7dbf-4bcd-9ec8-623633983a32",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:5678/webhook-test/OCA-data-submit",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1664,
+        592
+      ],
+      "id": "4c601d58-eb81-4c4b-b0e0-c38f2fe6706a",
+      "name": "to OCA"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=the input fields from request are:\ndata_items :  {{ $json.body.output.allowed }} \nTTL : {{ $json.body.output.TTL }} \nsource : {{ $json.body.body.source }}\ntransactionID : {{ $json.body.transactionID }}  \nsessionID : {{ $json.body.sessionID }}\nuser_hash: {{ $json.body.body.acc_num }}\nzk_dict: {{ $json.body.body.zk_thres }}\n\n\nthis is a test run just mock everything, dont use any Zero-Knowledge tool and send a response",
+        "options": {
+          "systemMessage": "You are Task Master Agent (TMA) a central_agent in a user and privacy centric data management service. You are given in input for each run these items: \"data_item\" : list of data points to be shared, \"source\" : source of the request, \"user_hash\" : hash of the user ID to identify data, \"transactionID\" : unique transaction ID, \"sessionID\" : unique ID to save memory, \"zk_dict\" : key-value pairs that tell about the check value for different data_points to get the Zero Knowledge (ZK) proofs.\nYour task to is to gather data for all the data_points in the \"data_items\" list, for this you have to following things:\nPhase 1: you have to ping the \"ZK_offerings\" webhook - available to you as one of the tools, this ping will get you a response with a list of data_item that can be completed and fullfilled by the \"Zero Knowledge Process\", in the response like \n{ \"zk_avail\" : [...] }, you need to save this and use it in the next phase.\nPhase 2: you need to itterate through all the items in the \"data_items\" list, for each \"data_item\" you have to do the following:\n-> If a \"data_item\" is in the the \"zk_avail\" list and a corresponding value for this \"data_point\" is also availaible in the \"zk_dict\" then you send a POST request to the \"ZK_Build\" webhook, available to you as a tool, in the request body you send the data in the following format: \n{ \"data_point\": \"current data item\" , \"user\" : user_hash, \"value\" : \"current data item value\", \"transaction_ID\" : \"...\" , \"sessionID\" : \"...\", \"source\" : \"...\" }\nonly use the \"ZK_build\" tool if the item is there not always, because it is very expensive\nIn response of this request you will receive a response body like { \"user\" : \"...\" , \"zk_res\": ... } , this is the zero knowledge response for the current data_item for the sent value, save it keyed with the \"data_point\", to be sent later in the output.\n-> if the \"data_item\" is not in the \"zk_avail\" list, you need to send a \"POST\" request to the \"DRA_fetch\" webhook, availaible to you as a tool, in the request body you send the data in the following format: \n{ \"type\" : \"FETCH\",  \"data_point\": \"current data item\" , \"user\" : user_hash, \"TTL\" : \"from orignal request\", \"transaction_ID\" : \"...\" , \"sessionID\" : \"...\", \"source\" : \"...\" }\nthe pair \"TYPE\": \"FETCH\" is an important field that is needed in the request.\nIn response of this request you will receive a response body like { \"user\" : \"...\" , \"data_token\": \"...\" }, this data token is like an access token that will be used to access the data later by another agent or the user, save it keyed with the \"data_point\", to be sent later in the output.\nOnce this phase is done for all \"data_items\", move to the next phase.\nPhase 3: for this you now need to build a \"data_out\" dictionary with the key - value pairs, with \"data_item\" being the key and the corresponding \"zk_res\" or \"data_token\" as the value. Once this is done you need to send this \"data_out\" dictionary in the output in the following format, making sure its a valid JSON.\nThe response format is:\n{\"user\" : \"...\" , \"data_items\": [...], \"data_out\" : {\"...\": \"...\"}.\n\nMake sure you follow the format strictly and make sure all the JSON are valid, and everything is done according to the system instructions.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        768,
+        704
+      ],
+      "id": "382afa6a-5909-4a9a-b50a-e5fd6dcb4882",
+      "name": "Task master agent"
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const data = { ...item.json };\n\n  // Remove unwanted fields\n  delete data.headers;\n  delete data.params;\n  delete data.query;\n\n  return { json: data };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        464
+      ],
+      "id": "59274dbb-2963-41e1-b31a-5e92b69e6169",
+      "name": "cleaner"
+    },
+    {
+      "parameters": {
+        "jsCode": "const agent_outinp = $input.first().json.output\n\nconst rep = agent_outinp.replace(/<think>.*?<\\/think>/gs,'').trim()\n\nconst inp = $input.first().json\ninp.output= rep\n\nreturn inp"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1440,
+        592
+      ],
+      "id": "83c71761-9fc0-46eb-921a-4c9aedf4a3a1",
+      "name": "agent cleaner"
+    },
+    {
+      "parameters": {
+        "content": "## Task Master Agent",
+        "height": 940,
+        "width": 1980,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -64,
+        224
+      ],
+      "typeVersion": 1,
+      "id": "0d5ec009-2da4-44ca-a392-20c805afe72c",
+      "name": "Sticky Note"
+    }
+  ],
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-07-21T22:22:30.210Z",
+      "updatedAt": "2025-07-21T22:22:30.210Z",
+      "id": "P0JZ8wyftr1p33R2",
+      "name": "airavat_workflow"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-07-21T22:35:16.000Z",
+  "versionId": "bfb759e3-29fa-46d2-bb71-1ebe4a593ec8"
+}
