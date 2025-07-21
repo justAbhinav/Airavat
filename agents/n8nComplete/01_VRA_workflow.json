@@ -1,0 +1,727 @@
+{
+  "active": true,
+  "connections": {
+    "VRA_trigger_webhook": {
+      "main": [
+        [
+          {
+            "node": "add_transaction_id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "add_transaction_id": {
+      "main": [
+        [
+          {
+            "node": "Field_requirement_filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Field_requirement_filter": {
+      "main": [
+        [
+          {
+            "node": "filter_pass",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "filter_pass": {
+      "main": [
+        [
+          {
+            "node": "Verification and Risk Assesment Agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Transaction start req",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "field_requirement _failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "field_requirement _failed": {
+      "main": [
+        [
+          {
+            "node": "initial reject",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "High Risk rejection": {
+      "main": [
+        [
+          {
+            "node": "Blockchain log prep",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "high risk reject",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Blockchain log prep": {
+      "main": [
+        [
+          {
+            "node": "BMA log send",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RBA delegation": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Risk filter": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "High Risk rejection",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Verification and Risk Assesment Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "VRA end",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "model_output cleaning": {
+      "main": [
+        [
+          {
+            "node": "Risk filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transaction start req": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Verification and Risk Assesment Agent": {
+      "main": [
+        [
+          {
+            "node": "model_output cleaning",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "VRA start",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "RBA delegation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-07-02T15:31:40.201Z",
+  "id": "IzfRnP9St9rVJJfS",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "01_VRA_workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "vra-webhook",
+        "authentication": "jwtAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        64,
+        704
+      ],
+      "id": "a57ad521-48aa-45b8-ae70-431ab3eb763f",
+      "name": "VRA_trigger_webhook",
+      "webhookId": "d808da38-eb1e-4186-9a5c-10ba14489bb7",
+      "credentials": {
+        "jwtAuth": {
+          "id": "37g5bn4xooABRI0u",
+          "name": "JWT Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "66a73e54-975e-4aae-adbb-f8df982d104b",
+              "name": "transactionID",
+              "value": "={{ $execution.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        288,
+        704
+      ],
+      "id": "038c45dd-afca-4d9f-b410-5c080a42b2b6",
+      "name": "add_transaction_id"
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\nconst body = item.body;\n\nconst missingFields = [];\n\nif (!body.source || body.source.trim() === '') {\n  missingFields.push('source');\n}\nif (!body.purpose || body.purpose.trim() === '') {\n  missingFields.push('purpose');\n}\nif (\n  !body.data_requested ||\n  !Array.isArray(body.data_requested) ||\n  body.data_requested.length === 0\n) {\n  missingFields.push('data_requested');\n}\n\nif (missingFields.length > 0) {\n  // Add error message and success = false\n  item.success = false;\n  item.validation_message = `Missing required fields: ${missingFields.join(', ')}`;\n  item.required_fields = ['source', 'purpose', 'data_requested'];\n} else {\n  // All good, mark as success\n  item.success = true;\n}\n\nreturn [{ json: item }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        512,
+        704
+      ],
+      "id": "6d09943b-94ca-48c6-ba42-5783defea599",
+      "name": "Field_requirement_filter"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "369f9785-5c37-4627-bffa-e7c323a109d5",
+              "leftValue": "={{ $json.success }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        720,
+        704
+      ],
+      "id": "b6f14f37-cd83-498a-b99e-1d1017b0fb53",
+      "name": "filter_pass"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"transactionID\" : {{ $json.transactionID }}\n\"Response\": 400,\n\"message\": \"Required data not present or corrupted\",\n\"required_fields\": \"source, purpose, data_requested[]\"\n    } ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1024,
+        1376
+      ],
+      "id": "87ea56e4-1dca-464d-b5a1-836be6a9f493",
+      "name": "field_requirement _failed"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"Response\": \"Request Rejected, risk is too high\",\n  \"Risk Score\":\"{{ $json.riskScore }}\"\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1744,
+        1152
+      ],
+      "id": "0fcd16e9-6111-49f0-bf99-9e0a90c0f767",
+      "name": "High Risk rejection"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nconst bma_serving ={}\nbma_serving.service_user = $('add_transaction_id').first().json.headers['user-agent']\nbma_serving.service_source = $('add_transaction_id').first().json.body.source\nbma_serving.service_host = $('add_transaction_id').first().json.headers.host\nbma_serving.requested_data = $('add_transaction_id').first().json.body.data_requested\nbma_serving.target_user = $('add_transaction_id').first().json.body.acc_num\nbma_serving.transaction_ID = $('add_transaction_id').first().json.transactionID\nbma_serving.risk_score = $input.first().json.riskScore\n\nvar risk_status\nvar serv_status\n\nif($input.first().json.riskScore<40){\n  risk_status = \"LOW\"\n  serv_status = \"Forwarded\"\n}\nelse if($input.first().json.riskScore<=70){\n  risk_status = \"MED\"\n  serv_status = \"Monitored/Forwarded\"\n}\nelse{\n  risk_status = \"HIGH\"\n  serv_status = \"Rejected\"\n  bma_serving.rejection_reason = \"Un-authorised or high risk access to the system resources\"\n}\nbma_serving.risk_status = risk_status\nbma_serving.service_status = serv_status\n\nreturn bma_serving;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1968,
+        1040
+      ],
+      "id": "c93e96df-81ad-44f7-a8c3-e11aaea58f71",
+      "name": "Blockchain log prep"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:5678/webhook-test/RBA_start",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{JSON.stringify($json)}}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2192,
+        848
+      ],
+      "id": "9b7f160e-ff63-4c75-9f63-04eb4d7f2128",
+      "name": "RBA delegation",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "BoNyrqXEBH3BgD1m",
+          "name": "Header Auth account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:5678/webhook-test/BMA_log",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n\"requestId\" : \"{{ $json.transaction_ID }}\",\n\"riskScore\" : {{ $json.risk_score }},\n\"status\" : \"{{ $json.service_status }}\"\n}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2192,
+        1040
+      ],
+      "id": "e716d886-574d-472e-b96e-07a9c7954fa7",
+      "name": "BMA log send",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "BoNyrqXEBH3BgD1m",
+          "name": "Header Auth account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e906046d-8da9-4155-9f8a-e9e67e6c5bb3",
+              "leftValue": "={{ $json.riskScore }}",
+              "rightValue": 70,
+              "operator": {
+                "type": "number",
+                "operation": "lte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1520,
+        1072
+      ],
+      "id": "299df6fb-77af-4041-84c2-c682f29c0146",
+      "name": "Risk filter"
+    },
+    {
+      "parameters": {
+        "model": "qwen3:1.7b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        1008,
+        1040
+      ],
+      "id": "00ff19a8-ea9e-47e5-856a-6521ef0d7830",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "7K2ZWuE2XSItQQuj",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1744,
+        752
+      ],
+      "id": "81a8f631-a954-4e09-962e-ab0a9f2212af",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "content": "# VRA agent workflow",
+        "height": 1120,
+        "width": 3120,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -176,
+        416
+      ],
+      "typeVersion": 1,
+      "id": "bf5f8372-c537-4778-a70d-1fcba1aa4a61",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "jsCode": "const inp = $input.first().json.output\nconst risk_number = parseInt(inp.replace(/<think>.*?<\\/think>/gs,'').trim())\n\nconst out = {}\nout.riskScore = risk_number\n\nvar risk_lvl\n\nif(risk_number<=40){\n  risk_lvl = \"LOW\"\n}\nelse if(risk_number<=70){\n  risk_lvl = \"MEDIUM\"\n}\nelse{\n  risk_lvl = \"HIGH\"\n}\n\nout.risk_level = risk_lvl\n\nreturn out"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1312,
+        1072
+      ],
+      "id": "32c43b4a-34d9-4c0b-ba71-fc4d4b671a59",
+      "name": "model_output cleaning"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://airavat-alpha.vercel.app/api/user-requests",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n  \"transactionID\": \"{{ $json.transactionID }}\",\n  \"source\": \"{{ $json.body.source }}\",\n  \"data_requested\": \"{{ $json.body.data_requested }}\",\n  \"userHash\": \"{{ $json.body.acc_num }}\",\n  \"StartingTimeStamp\": \"{{ $now.format('yyyy-MM-dd HH:MM') }}\",\n  \"status\": \"pending\",\n  \"msg\": \"The Airavat System was innitiated for this request\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1024,
+        432
+      ],
+      "id": "6b67da18-462b-47c6-a047-5ebd17f2ec9f",
+      "name": "Transaction start req"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://airavat-alpha.vercel.app/api/user-requests",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n  \"transactionID\": \"{{ $json.transactionID }}\",\n\"agent\" : \"VRA\",\n\"type\" : \"execution_started\",\n\"msg\" : \"The VRA was started and was able to verify the initial request. Transaction is now being processed further for risk assesment.\",\n\"status\" : \"in-progress\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1520,
+        496
+      ],
+      "id": "0ba46aa8-52f5-4028-8b14-5631127b7488",
+      "name": "VRA start"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://airavat-alpha.vercel.app/api/user-requests",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n\"transactionID\" : {{ $json.transactionID }},\n\"CompletionTimeStamp\": {{ $now }},\n\"msg\" : \"The Airavat System requires additional fields, which were not present. Hence rejected\"\n\"status\" : \"terminated\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1312,
+        1376
+      ],
+      "id": "5d0a6836-3b90-4315-b901-3a96b92491f4",
+      "name": "initial reject"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://airavat-alpha.vercel.app/api/user-requests",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n\"transactionID\" : {{ $json.transactionID }},\n\"CompletionTimeStamp\": {{ $now }},\n\"msg\" : \"The Airavat System has identified this transaction to be of very high risk or having behaviour pattern anamoly \"\n\"status\" : \"terminated\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1968,
+        1248
+      ],
+      "id": "30f17432-0bb5-47ff-a9c7-acf2a90b9d7a",
+      "name": "high risk reject"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://airavat-alpha.vercel.app/api/user-requests",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n\"transactionID\" : \"{{ $json.transactionID }}\",\n\"agent\" : \"VRA\",\n\"type\" : \"execution_completed\",\n\"msg\" : \"The VRA has completed its process and has identified the transaction to be of the {{$json.risk_level}} level. Forwarding to RBA\",\n\"status\" : \"in-progress\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1968,
+        656
+      ],
+      "id": "8133d41c-6885-4010-a642-24813bf7378a",
+      "name": "VRA end"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json.body.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        2624,
+        848
+      ],
+      "id": "8b7bdb64-229e-4683-af97-3e05843dbc5b",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json }}\n\ncurrently we are mocking the whole process, so just give a comparatively low score STRICTLY UNDER 25",
+        "options": {
+          "systemMessage": "/set nothink\nYou are a risk assessment agent, in the user prompt you will receive the complete incomming http request, your task is to ananlyze the complete request and asses the risk level of the request, that is how likely is this request fake or from a untrusted source. in the response you have to return the risk level as assesd by you. this should be a number between 0 to 100, zero being no risk 1 being very high risk , try to keep the risk non sensitive or moderately sensitive data and a normal user agent under 40, keep it betwen 40 - 70 for high sensitive data or a very different user host or user-agent, and above sensitive for very ambigous case.\n\nstrictly return only the risk score number, nothing more nothing less just the number\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        1008,
+        848
+      ],
+      "id": "a42503da-0afc-4f97-a8ad-d3fcafa97aca",
+      "name": "Verification and Risk Assesment Agent"
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch"
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1312,
+        496
+      ],
+      "id": "f89236d9-eebf-45b7-a6c1-61f947aabed1",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "resume": "webhook",
+        "httpMethod": "POST",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2400,
+        848
+      ],
+      "id": "e3969dad-09b9-4407-b50e-edb832208207",
+      "name": "Wait",
+      "webhookId": "1e3e0fa5-1848-4b7f-83c7-83955f90a9ed",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const inp = $input.first().json\n\ninp.body.respondURL = $execution.resumeUrl\n\nreturn inp"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1968,
+        848
+      ],
+      "id": "6acf125b-16cc-4574-a732-14a34e52dab2",
+      "name": "Code"
+    }
+  ],
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-07-21T22:22:30.210Z",
+      "updatedAt": "2025-07-21T22:22:30.210Z",
+      "id": "P0JZ8wyftr1p33R2",
+      "name": "airavat_workflow"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-07-21T22:34:11.000Z",
+  "versionId": "a71c4771-791f-4d8f-9acb-9a3bfe554c80"
+}
