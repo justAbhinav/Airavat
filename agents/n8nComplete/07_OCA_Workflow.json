@@ -1,0 +1,366 @@
+{
+  "active": true,
+  "connections": {
+    "OCA call": {
+      "main": [
+        [
+          {
+            "node": "cleaner",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "OCA",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "respond back",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "BMA log send",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "OCA end",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "respond back": {
+      "main": [
+        []
+      ]
+    },
+    "OCA": {
+      "main": [
+        [
+          {
+            "node": "agent output parser",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "cleaner": {
+      "main": [
+        [
+          {
+            "node": "OCA start",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "OCA",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "agent output parser": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-07-20T17:11:32.216Z",
+  "id": "kShQKaRnPL4bW2YN",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "07_OCA_Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "OCA-data-submit",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -640,
+        368
+      ],
+      "id": "ea27fa80-d687-418a-b2ca-e4385a4cca4b",
+      "name": "OCA call",
+      "webhookId": "2e34f882-1c4b-4f0e-a40f-18f41e52f129"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://airavat-alpha.vercel.app/api/user-requests",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n\"transactionID\" : \"{{$json.body.transactionID}}\",\n\"agent\" : \"OCA\",\n\"type\" : \"execution_started\",\n\"msg\" : \"OCA has recieved the final Data and is now building the response as per requirement\",\n\"status\" : \"in-progress\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -128,
+        464
+      ],
+      "id": "5e1152ae-9087-49d3-8cd9-43e8d73c400c",
+      "name": "OCA start"
+    },
+    {
+      "parameters": {
+        "model": "qwen3:4b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -224,
+        144
+      ],
+      "id": "51157e3c-51b0-4646-893e-3846981f5769",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "7K2ZWuE2XSItQQuj",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch"
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        384,
+        272
+      ],
+      "id": "4c04a370-145d-4ae2-b018-9d59ff785d7d",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "content": "## Output Control Agent workflow",
+        "height": 700,
+        "width": 1840,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -784,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "687da9b7-0ddb-48f8-a51f-39da8e4859f9",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:5678/webhook-test/BMA_log",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n\"requestId\" : \"{{ $json.body.transactionID }}\",\n\"riskScore\" : {{ $json.body.riskScore }},\n\"status\" : \"COMPLETED\"\n}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        832,
+        464
+      ],
+      "id": "a69e3e31-bb1c-4085-a8ac-57a80b2a3d76",
+      "name": "BMA log send",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "BoNyrqXEBH3BgD1m",
+          "name": "Header Auth account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://airavat-alpha.vercel.app/api/user-requests",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n\"transactionID\" : \"{{ $json.body.transactionID }}\",\n\"agent\" : \"OCA\",\n\"type\" : \"execution_completed\",\n\"msg\" : \"OCA has completed the request and is noww sending back the response to the third party\",\n\"status\" : \"in-progress\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        832,
+        272
+      ],
+      "id": "7dff4cd8-d067-40e9-b9b4-79ace9d8a953",
+      "name": "OCA end"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        608,
+        464
+      ],
+      "id": "5dcefbb9-2772-49f4-96cc-9fa5d4bc21a9",
+      "name": "Wait",
+      "webhookId": "17ad222c-2912-4ab1-809b-096bc032fe6e"
+    },
+    {
+      "parameters": {
+        "amount": 2
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        608,
+        272
+      ],
+      "id": "651cde37-ecff-44ed-b04c-0365097996d2",
+      "name": "Wait1",
+      "webhookId": "80829cba-5c0f-42f4-ad1b-e7f1da2e7101"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.body.body.respondURL }}",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        608,
+        64
+      ],
+      "id": "c9b6c17d-c372-437e-8dca-8aef40892e67",
+      "name": "respond back"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{$json}}",
+        "options": {
+          "systemMessage": "/set nothink\nYou are Output Control Agent (OCA), you will receive in the user message a complete http request and the output data which is the response to the http request, your task is to transform the output in a api friendly response format and send it as a valid json to the output, make sure to only send the valid json and nothing else."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -208,
+        -48
+      ],
+      "id": "f313bdb5-ed97-41f2-8216-e07edebe4969",
+      "name": "OCA"
+    },
+    {
+      "parameters": {
+        "jsCode": "const inp = $input.first().json.body\n\nreturn inp"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -416,
+        368
+      ],
+      "id": "d70cb314-b9c3-4943-82a9-4c854651f180",
+      "name": "cleaner"
+    },
+    {
+      "parameters": {
+        "jsCode": "const inp = $input.first().json.output\nconst output = inp.replace(/<think>.*?<\\/think>/gs,'').trim()\n\nreturn JSON.parse(output)\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        160,
+        64
+      ],
+      "id": "69518885-ca64-4260-bf3d-d1f0579a6ab8",
+      "name": "agent output parser"
+    }
+  ],
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-07-21T22:22:30.210Z",
+      "updatedAt": "2025-07-21T22:22:30.210Z",
+      "id": "P0JZ8wyftr1p33R2",
+      "name": "airavat_workflow"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-07-21T22:37:12.000Z",
+  "versionId": "eeb31c3e-fb9e-453f-a33b-ebb4093c1059"
+}
