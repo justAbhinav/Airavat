@@ -1,0 +1,186 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "BMA start",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "BMA end",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-07-03T18:24:57.166Z",
+  "id": "Kcz7U2PvhLxBVsKj",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "08_BMA_workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "BMA_log",
+        "authentication": "headerAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        112,
+        -144
+      ],
+      "id": "b2f6853f-4097-4280-9038-29ee8ceda501",
+      "name": "Webhook",
+      "webhookId": "4970ee16-04c9-4d3f-b31f-cd5c427d9507",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "PFNgdUdijWTONXke",
+          "name": "Header Auth account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://airavat-alpha.vercel.app/api/user-requests",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n\"transactionID\" : \"1186\",\n\"agent\" : \"BBA\",\n\"type\" : \"execution_started\",\n\"msg\" : \"The BMA has recieved the request log for the transaction.\",\n\"status\" : \"in-progress\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        0
+      ],
+      "id": "2a9ac5ee-cabf-4430-af2c-842c428e5a4f",
+      "name": "BMA start"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://airavat-alpha.vercel.app/api/user-requests",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n\"transactionID\" : \"1186\",\n\"agent\" : \"BBA\",\n\"type\" : \"execution_completed\",\n\"msg\" : \"BBA has completed the logging process, you can find the log at the following transaction hash: https://sepolia.etherscan.io/tx/{{ $json.txHash }}\",\n\"status\" : \"completed\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        768,
+        -224
+      ],
+      "id": "3736b487-93bb-4e10-8657-0a54c42906b7",
+      "name": "BMA end"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        544,
+        -224
+      ],
+      "id": "2c07efc9-5542-4132-a364-c313c91d4b42",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://sip-lover-horizontal-corner.trycloudflare.com/log",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={ \"requestId\":  \"{{ $json.body.requestId }}\", \n\"riskScore\":  {{ $json.body.riskScore }},\n\"status\":  \"{{ $json.body.status }}\" }",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        -304
+      ],
+      "id": "4bffa307-1d49-4538-aec8-211fa5e311f3",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 560,
+        "width": 1000
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        -384
+      ],
+      "typeVersion": 1,
+      "id": "7d4a7449-8121-4800-92a6-f3758c0d10ca",
+      "name": "Sticky Note"
+    }
+  ],
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
+  "tags": [
+    {
+      "createdAt": "2025-07-21T22:22:30.210Z",
+      "updatedAt": "2025-07-21T22:22:30.210Z",
+      "id": "P0JZ8wyftr1p33R2",
+      "name": "airavat_workflow"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-07-21T22:37:29.000Z",
+  "versionId": "6d500b9f-b899-4fc8-ba54-7ebb5c24803a"
+}
