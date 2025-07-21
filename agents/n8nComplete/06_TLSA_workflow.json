@@ -1,0 +1,723 @@
+{
+  "active": true,
+  "connections": {
+    "Crypto": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "TLSA merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "file submit": {
+      "main": [
+        [
+          {
+            "node": "hash_object_creation",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Compression1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "TLS store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "hash_object_creation": {
+      "main": [
+        [
+          {
+            "node": "hash creator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "hash creator": {
+      "main": [
+        [
+          {
+            "node": "time limit calc",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "file_retrieval_hook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "file_decompression",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "file_decompression": {
+      "main": [
+        [
+          {
+            "node": "TTL and request check",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Compression1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "TLS store": {
+      "main": [
+        [
+          {
+            "node": "respond to file submit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "time limit calc": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TTL and request check": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data_put_webhook": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "TLSA START",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "TLSA merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Crypto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TLSA merge": {
+      "main": [
+        [
+          {
+            "node": "DRA end",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-07-07T20:16:38.740Z",
+  "id": "axkNm7l6Kayq65u0",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "06_TLSA_workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"Success\": true,\n  \"token\" : \"{{ $json.hashed }}\"\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        672,
+        848
+      ],
+      "id": "a47ef9c7-f2e0-45b9-a1cf-5056f3aaa754",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "type": "SHA256",
+        "value": "={{ $json.transaction_id }}",
+        "dataPropertyName": "hashed",
+        "encoding": "base64"
+      },
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 1,
+      "position": [
+        448,
+        848
+      ],
+      "id": "67b112b3-0f55-40ee-8d23-8cb82ff5592f",
+      "name": "Crypto"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "TLS_file_submit",
+        "responseMode": "responseNode",
+        "options": {
+          "binaryPropertyName": "fileToSubmit"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        -96
+      ],
+      "id": "c6d0f43c-693c-4a35-8199-d14a87e27095",
+      "name": "file submit",
+      "webhookId": "affdefc7-d427-4933-96c3-e693ca68b643"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        880,
+        -96
+      ],
+      "id": "96637c94-5fef-4631-a940-e5a7756361f7",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "\nreturn $input.all().map(item => {\n  const { userHash, email, timeStampSec, currentTimeStamp, ttl} = item.json.body;\n  const hashSource = `${userHash}:${email}:${timeStampSec}`;\n\n  return {\n    json: {\n      hashSource,\n      timeStampSec,\n      currentTimeStamp,\n      ttl\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        -208
+      ],
+      "id": "5334b439-f2af-45af-bc00-134a2d699aae",
+      "name": "hash_object_creation"
+    },
+    {
+      "parameters": {
+        "type": "SHA256",
+        "value": "={{ $json.hashSource }}",
+        "dataPropertyName": "hashvalue"
+      },
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 1,
+      "position": [
+        448,
+        -208
+      ],
+      "id": "f7201c82-5826-486a-9e47-62405beb7ea2",
+      "name": "hash creator"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "get_file_back",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        368
+      ],
+      "id": "1fb4822d-b493-42c7-8ba0-5fc537b5dd22",
+      "name": "file_retrieval_hook",
+      "webhookId": "cf6615b9-85bc-4877-af70-e82fd8d1a376",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "svsTzjOVhcCiQoKM",
+          "name": "Header Auth account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "http://host.docker.internal:3000/data",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "token",
+              "value": "={{ $json.body.token }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        224,
+        368
+      ],
+      "id": "0c9975c9-42f0-400d-86e4-c75dd919b9c6",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "outputPrefix": "uncompressed"
+      },
+      "type": "n8n-nodes-base.compression",
+      "typeVersion": 1.1,
+      "position": [
+        448,
+        368
+      ],
+      "id": "10828630-1c16-41d0-9a52-b39dd3c3361b",
+      "name": "file_decompression"
+    },
+    {
+      "parameters": {
+        "jsCode": "const now = $now.toSeconds()\nconst secondsLimit = $input.first().json.headers.secondslimit\nconst ttl = $input.first().json.headers.ttl\nvar result = false\nif(parseFloat(secondsLimit) > now){\n  result= true\n}\n\nconst inp = $input.first().json\ninp.result = result\n\nreturn inp"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        448
+      ],
+      "id": "343a2bee-7ecf-48cc-be03-872f4b99ae8b",
+      "name": "TTL and request check"
+    },
+    {
+      "parameters": {
+        "operation": "compress",
+        "binaryPropertyName": "fileToSubmit0",
+        "outputFormat": "gzip",
+        "fileName": "compressedFile",
+        "binaryPropertyOutput": "compressedFile0"
+      },
+      "type": "n8n-nodes-base.compression",
+      "typeVersion": 1.1,
+      "position": [
+        672,
+        0
+      ],
+      "id": "d4cb2ea0-b6f9-49a9-8bff-f921b75261e5",
+      "name": "Compression1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:3000/upload",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "userHash",
+              "value": "={{ $json.body.userHash }}"
+            },
+            {
+              "name": "email",
+              "value": "={{ $json.body.email }}"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "=compressedFile0"
+            },
+            {
+              "name": "token",
+              "value": "={{ $json.hashvalue }}"
+            },
+            {
+              "name": "currentTimeStamp",
+              "value": "={{ $json.currentTimeStamp }}"
+            },
+            {
+              "name": "ttl",
+              "value": "={{ $json.ttl }}"
+            },
+            {
+              "name": "secondsLimit",
+              "value": "={{ $json.timeLimit }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1104,
+        -96
+      ],
+      "id": "418b431b-1bc8-4e7f-b507-edf3f1e45207",
+      "name": "TLS store"
+    },
+    {
+      "parameters": {
+        "jsCode": "const inp = $input.first().json\n\nvar timeLimit = parseFloat(inp.timeStampSec) + parseInt(inp.ttl)\n\ninp.timeLimit = timeLimit\n\nreturn inp"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        -208
+      ],
+      "id": "7b4202fc-3e6a-4481-b9e6-cfcee35a9a1b",
+      "name": "time limit calc"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n\"token\" : \"{{ $json.token }}\",\n\"success\" : {{ $json.success }}\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1328,
+        -96
+      ],
+      "id": "629d2990-ae9a-4fc1-8d9c-869d72c9a7ee",
+      "name": "respond to file submit"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b4f5fce4-d41f-4e68-8c31-7b0c070a8620",
+              "leftValue": "={{ $json.result }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        880,
+        448
+      ],
+      "id": "589e3cfc-d996-40c8-b834-7385c94afe17",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1104,
+        272
+      ],
+      "id": "04ba5eb9-df9c-4ffa-84b9-d131b9f0d9c6",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"msg\" : \"time limit over, please request the data again\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1104,
+        496
+      ],
+      "id": "b7ec4f00-7163-483b-aae3-addf2234e517",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "respondWith": "binary",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1328,
+        272
+      ],
+      "id": "cc7070c5-ae88-4272-97cf-86b13a08bc59",
+      "name": "Respond to Webhook2"
+    },
+    {
+      "parameters": {
+        "content": "## TLS file collect",
+        "height": 440,
+        "width": 1620,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -64,
+        240
+      ],
+      "typeVersion": 1,
+      "id": "0a1ec436-6c75-4543-9f9e-14e97b63d971",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## TLS file submit",
+        "height": 480,
+        "width": 1620,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -64,
+        -304
+      ],
+      "typeVersion": 1,
+      "id": "b5c0174e-ecb4-4063-9f17-69f280aad8c4",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## TLS data put",
+        "height": 560,
+        "width": 1040,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -64,
+        720
+      ],
+      "typeVersion": 1,
+      "id": "3d91fb67-7628-48ba-ba16-64ed1bd960de",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "TLS_data_put",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        848
+      ],
+      "id": "be2497b7-3df9-43f0-9fe3-b8238c041300",
+      "name": "Data_put_webhook",
+      "webhookId": "79a0b535-ed2f-4426-bf83-b4eca9a35dc0"
+    },
+    {
+      "parameters": {
+        "jsCode": "const inp = $input.first().json\nconst chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';\n\nconst randomString = Array.from({ length: 32 }, () =>\n  chars[Math.floor(Math.random() * chars.length)]\n).join('');\n\nreturn [\n  {\n    json: {\n      transaction_id: randomString\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        848
+      ],
+      "id": "cad5e2a0-b244-4279-9e30-bd52785676fe",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://airavat-alpha.vercel.app/api/user-requests",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n\"transactionID\" : \"{{ $json.headers.transactionid }}\",\n\"agent\" : \"TLSA\",\n\"type\" : \"execution_completed\",\n\"msg\" : \"The TLSA has successfully stored data\",\n\"status\" : \"in-progress\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        752,
+        1040
+      ],
+      "id": "e5e95877-cfa7-4c98-b39c-bb890f434684",
+      "name": "DRA end"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://airavat-alpha.vercel.app/api/user-requests",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n\"transactionID\" : \"{{ $json.headers.transactionid }}\",\n\"agent\" : \"TLSA\",\n\"type\" : \"execution_started\",\n\"msg\" : \"The TLS has recieved the Data to store\",\n\"status\" : \"in-progress\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        192,
+        1040
+      ],
+      "id": "333c4c98-42de-49cc-af2f-9ca05dfa8e61",
+      "name": "TLSA START"
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch",
+        "useDataOfInput": 2
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        592,
+        1040
+      ],
+      "id": "64bcc3da-1dd6-4b32-ba7c-8c4bd16b5a3a",
+      "name": "TLSA merge"
+    }
+  ],
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-07-21T22:22:30.210Z",
+      "updatedAt": "2025-07-21T22:22:30.210Z",
+      "id": "P0JZ8wyftr1p33R2",
+      "name": "airavat_workflow"
+    }
+  ],
+  "triggerCount": 3,
+  "updatedAt": "2025-07-21T22:36:50.000Z",
+  "versionId": "78a7e09c-ff0f-4e9e-a96e-133624445bab"
+}
