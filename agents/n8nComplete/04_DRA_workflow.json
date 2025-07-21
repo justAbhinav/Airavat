@@ -1,0 +1,804 @@
+{
+  "active": true,
+  "connections": {
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "DRA",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "DRA",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DATA_FETCH": {
+      "main": [
+        [
+          {
+            "node": "fetch editor",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "DRA fetch-start",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "If fetch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook1": {
+      "main": [
+        []
+      ]
+    },
+    "TLS_DATA_submit webhook": {
+      "ai_tool": [
+        [
+          {
+            "node": "DRA",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data_Pre_load": {
+      "main": [
+        [
+          {
+            "node": "pre editor",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "DRA pre-fetch-start",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data_submit": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "respond to data_webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "File retrieval": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DRA": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fetch editor": {
+      "main": [
+        [
+          {
+            "node": "DRA",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "pre editor": {
+      "main": [
+        [
+          {
+            "node": "if pre",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "DRA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "DRA end",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "if pre": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "If fetch": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-07-05T18:31:30.769Z",
+  "id": "Sli6AK2wU33N4unC",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "04_DRA_workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "final_fetch_data",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -448,
+        240
+      ],
+      "id": "86596147-02d9-4bc7-9372-66d544a02f44",
+      "name": "DATA_FETCH",
+      "webhookId": "36ba8620-517a-4374-93c7-9653cfed706b"
+    },
+    {
+      "parameters": {
+        "model": "qwen3:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        32,
+        272
+      ],
+      "id": "7f0bfb61-607d-4976-a71a-a4391e030b47",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "7K2ZWuE2XSItQQuj",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $input.first().json.session }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        144,
+        272
+      ],
+      "id": "44d146e6-3a26-40bf-aa42-2268bdb8a9ec",
+      "name": "Simple Memory",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const inp = $input.first().json.output\n\nconst rep = inp.replace(/<think>.*?<\\/think>/gs,'').trim()\n\nreturn JSON.parse(rep)"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        48
+      ],
+      "id": "5a73c704-e311-4d46-b143-f9e705de043e",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        928,
+        32
+      ],
+      "id": "58e754dd-892c-493f-a8ee-4cab0e09d88d",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"msg\": \"data fetch started\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        368,
+        -208
+      ],
+      "id": "9bcb9715-b171-4506-b594-eb21d4c22f45",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "toolDescription": "This is the TLS data submit webhook, you use it to send data to the TLS server and in response get a data_token, which acts as a link to access your data.\nsend your POST requests with a raw body having these fields\n{ \"data_item\" : ,\"data_value\": , \"userID\": , \"TTL\" : }\n\nif multiple values are there then send that data in the form of a json attached to the \"data_value\" key above, this json may have within it arrays or further json as required, but keep in mind all the data needs to be sent in the \"data_value\" key, the \"data_item\" key will tell the tool what that specific data is about\n\nin response you will get a response of format:\n{ \"Success\": true/flase, \"Data Link\" : \"...\" } ",
+        "method": "POST",
+        "url": "http://localhost:5678/webhook/TLS_data_put",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "transactionID",
+              "value": "={{ $('fetch editor').item.json.transactionID }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Content_Type', ``, 'string') }}",
+        "body": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Body', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        272,
+        272
+      ],
+      "id": "5f16f9b6-42a7-4109-b1d7-0c6ec7284dec",
+      "name": "TLS_DATA_submit webhook"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "DRA_pre_fetch",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -448,
+        -160
+      ],
+      "id": "cd42accb-d923-489c-8abc-55c118779b1b",
+      "name": "Data_Pre_load",
+      "webhookId": "88ffe4cb-5fd4-4660-98bc-b34bc4e2efb3"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "data-submit-hook",
+        "authentication": "jwtAuth",
+        "responseMode": "responseNode",
+        "options": {
+          "binaryPropertyName": "fileToSubmit"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -448,
+        -800
+      ],
+      "id": "dd85928c-62b0-4c6b-afd3-f2be823c8077",
+      "name": "Data_submit",
+      "webhookId": "b3586e3c-97e8-49a9-8160-da74ddad4622",
+      "credentials": {
+        "jwtAuth": {
+          "id": "oOh5dkw4B976Expj",
+          "name": "data submission"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:5678/webhook/TLS_file_submit",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "email",
+              "value": "={{ $json.body.email}}"
+            },
+            {
+              "name": "userHash",
+              "value": "={{ $json.body.userHash }}"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "=fileToSubmit0"
+            },
+            {
+              "name": "ttl",
+              "value": "={{ $json.body.ttl }}"
+            },
+            {
+              "name": "currentTimeStamp",
+              "value": "={{ $json.currentTimeStamp }}"
+            },
+            {
+              "name": "timeStampSec",
+              "value": "={{ $json.timeStampSec }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        0,
+        -800
+      ],
+      "id": "36c75516-3fa0-4a6e-a91b-6690bc2dcd83",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8f9ea40d-dd0f-4202-8e2e-b8e1575c8a1e",
+              "name": "currentTimeStamp",
+              "value": "={{ $now }}",
+              "type": "string"
+            },
+            {
+              "id": "9ea0d0dc-5d75-4644-986e-a3ef09c1c14a",
+              "name": "timeStampSec",
+              "value": "={{ $now.toSeconds() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -224,
+        -800
+      ],
+      "id": "b897cbe9-df7b-495a-8a3a-15ff3b8ece0b",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        224,
+        -800
+      ],
+      "id": "b53b6fdd-9f57-41c6-8972-4460b6004706",
+      "name": "respond to data_webhook"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "retrieve_file",
+        "authentication": "jwtAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -320,
+        -464
+      ],
+      "id": "90649f9a-9827-47cd-905e-2b7cd92d7e9e",
+      "name": "File retrieval",
+      "webhookId": "5278c388-72f3-4662-b354-da64afa8259e",
+      "credentials": {
+        "jwtAuth": {
+          "id": "oOh5dkw4B976Expj",
+          "name": "data submission"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:5678/webhook/get_file_back",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json.body }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "fileSubmitted"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -96,
+        -464
+      ],
+      "id": "a178cf32-1ff1-45f5-82e4-3bd9af4aa7f5",
+      "name": "HTTP Request1",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "svsTzjOVhcCiQoKM",
+          "name": "Header Auth account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "binary",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        128,
+        -464
+      ],
+      "id": "3af85762-bea2-4765-90e8-797343964124",
+      "name": "Respond to Webhook2"
+    },
+    {
+      "parameters": {
+        "content": "## Data Submission from bank\nThis workflow submits the data to the bank",
+        "height": 320,
+        "width": 1000,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -528,
+        -944
+      ],
+      "typeVersion": 1,
+      "id": "9da09427-1255-4aae-ba21-192c750fc40d",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## User app file retrieve\n",
+        "height": 300,
+        "width": 980,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -528,
+        -560
+      ],
+      "typeVersion": 1,
+      "id": "a73df587-e86b-46d4-8feb-46771967ba7e",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## DRA main workflow\n",
+        "height": 820,
+        "width": 1680,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -544,
+        -224
+      ],
+      "typeVersion": 1,
+      "id": "b4458d3d-dd58-4f01-8ca8-569f52f3af35",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://airavat-alpha.vercel.app/api/user-requests",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n\"transactionID\" : \"{{ $json.body.transactionID }}\",\n\"agent\" : \"DRA\",\n\"type\" : \"execution_started\",\n\"msg\" : \"The DRA recieved a pre-fetch request from RBA and has started a pre-fetch. Locating the Data now\",\n\"status\" : \"in-progress\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -224,
+        -160
+      ],
+      "id": "406f45f6-ec9c-43c8-9a93-f7b85b4c026d",
+      "name": "DRA pre-fetch-start"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://airavat-alpha.vercel.app/api/user-requests",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n\"transactionID\" : \"{{ $json.body.transaction_ID }}\",\n\"agent\" : \"DRA\",\n\"type\" : \"execution_started\",\n\"msg\" : \"The DRA recieved fetch request, getting the data now\",\n\"status\" : \"in-progress\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -240,
+        432
+      ],
+      "id": "57ea911b-e1fe-49fe-b16f-06f19538cace",
+      "name": "DRA fetch-start"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=so input data is:\nrequest_type : {{ $json.type }} , \ndata_requested :  {{ $json.data_requested }} {{ $json.data_point }},\nuser_hash : {{ $json.user }} , \ntransactionID : {{ $json.transactionID }} , \nsessionID : {{ $json.session }} {{ $json.sessionID }},\nTTL : {{ $json.ttl }} {{ $json.TTL }}\n\nfor now no data server is connected so just assume you have some attached server, and generate some random fabricated data and give a valid response accordingly, the fabricated response should look like an actual data with fields and everything, make it look very real, make sure you use the TLS tool",
+        "options": {
+          "systemMessage": "You are Data Retrieval Agent (DRA), an optimized data collection and managing agent of a system that aims to securely and efficiently provide data retrieval service to other agents and users.\nYou will be receiving two types of request from the users with the following fields : \"request_type\" - the type of request, guids your next steps, \"data_requested\" - a list of all data requested, \"user_hash\" - a hash of the user ID, \"TTL\" - time to live for a data, explained later, \"transactionID\" - unique transaction ID , \"sessionID\" - memory index. \n\nYou will recieve two types of requests from the users \n1) \"type\" : \"PRE\" : The is the PRECEDING phase, this phase is to optimize data delivery, your task is to efficiently and intelligently search through the attached data servers, like bank servers, financial archives server, goverment records, etc. and find out the location of all the \"data_items\" in the \"data_requested\" list for the user \"user_hash\" and store that location in the memory, for future reference and a follow up request of type \"FETCH\". Ignore the TTL for this type of request.\n\n2) \"type\":\"FETCH: this is a follow up request to a previous \"PRE\" request indexed by the \"sessionID\" and  \"transactionID\", your task here is to finally fetch the requested data listed in the \"data_point\" field of this request using the discovery loaction, saved in your memory from the previous \"PRE\" type request.\nOnce you have completely fetched the requested data, you need to use the \"TLS_DATA_submit\" webhook, availaible to you as a tool, you need to send a POST request in the following format:\n{ \"data_item\" : ,\"data_value\": , \"userID\": , \"TTL\" : }\n\nas a response you will get a response body, something like:\n{\n  \"Success\": true/flase,\n  \"Data Link\" : \"...\"\n} \n\nthis \"Data Link\" is an unique identifier that acts as an access token to be used by other agents or user.\nonce this is done, you need to give out your final output in the following format, making sure they are valid JSON\n\nif its a PRE request:\n{ \"type\" : \"PRE\" , \"user\" : \"...\" , \"success\" : true/false }\n\nif its a FETCH request:\n{\"type\" : \"FETCH\" , \"data_link\" : \"...\" }\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        64,
+        48
+      ],
+      "id": "4985c59f-904c-4fe5-8fd1-d5723c24aded",
+      "name": "DRA"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://airavat-alpha.vercel.app/api/user-requests",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n\"transactionID\" : \"{{ $json.transactionID }}\",\n\"agent\" : \"DRA\",\n\"type\" : \"execution_completed\",\n\"msg\" : \"The DRA has located, fetched and delivered the data to the TLS, reverting back to the TMA\",\n\"status\" : \"in-progress\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        944,
+        224
+      ],
+      "id": "3e639b42-1da7-4355-82b6-c20c232ad7b0",
+      "name": "DRA end"
+    },
+    {
+      "parameters": {
+        "jsCode": "const inp = $input.first().json.body\ninp.transactionID = $input.first().json.body.transaction_ID\ninp.session = $input.first().json.body.sessionID\n\n\nreturn inp"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -240,
+        240
+      ],
+      "id": "8c6bb379-a039-46c0-8648-496ac8a9463c",
+      "name": "fetch editor"
+    },
+    {
+      "parameters": {
+        "jsCode": "const inp = $input.first().json.body\ninp.ttl = \"N/A\"\n\nreturn inp"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -224,
+        48
+      ],
+      "id": "e6522ca6-4c6b-4743-b450-b5c225905dbb",
+      "name": "pre editor"
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch"
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        784,
+        224
+      ],
+      "id": "b4f6d868-b0ba-41f0-903f-0e788956fe36",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d52c8612-08fe-427f-8e29-2a8e69768196",
+              "leftValue": "={{ $json.type }}",
+              "rightValue": "PRE",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        48,
+        -208
+      ],
+      "id": "d5df2f67-5b09-451e-b443-58b964ddf147",
+      "name": "if pre"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d04a6e58-4306-480d-9404-90bb4f535125",
+              "leftValue": "={{ $json.type }}",
+              "rightValue": "FETCH",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        624,
+        80
+      ],
+      "id": "fc29f920-a9bb-4eb0-b27d-7f634f40508e",
+      "name": "If fetch"
+    }
+  ],
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-07-21T22:22:30.210Z",
+      "updatedAt": "2025-07-21T22:22:30.210Z",
+      "id": "P0JZ8wyftr1p33R2",
+      "name": "airavat_workflow"
+    }
+  ],
+  "triggerCount": 4,
+  "updatedAt": "2025-07-21T22:35:36.000Z",
+  "versionId": "d921cd52-5416-41b8-8c67-76c9f4136168"
+}
