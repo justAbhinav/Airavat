@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Call the webhook with the required format
-    const webhookUrl = process.env.WEBHOOK_URL || 'https://diary-listings-applied-biblical.trycloudflare.com/webhook/data-submit-hook'
+    const webhookUrl = process.env.WEBHOOK_URL || 'https://amd-varying-screening-janet.trycloudflare.com/webhook/data-submit-hook'
     const jwtToken = process.env.WEBHOOK_JWT_TOKEN || 'eyJhbGciOiJIUzI1NiJ9.e30.NO3TAh5-AR98dkx9UIgBDE-u4hZs4Rh7F0qu8iRfob8'
 
     // Prepare form data for the webhook
@@ -54,10 +54,12 @@ export async function POST(request: NextRequest) {
     if (file) {
       // Ensure file is properly handled as binary
       if (file instanceof File) {
-        formData.append('file', file, file.name)
+        formData.append('file', file, file.name);
       } else {
         // If file is base64 or other format, convert to blob
+        console.log("file",file);
         const blob = new Blob([file])
+        console.log("blob",blob);
         formData.append('file', blob, 'file')
       }
     }
@@ -82,7 +84,14 @@ export async function POST(request: NextRequest) {
         throw new Error(`Webhook failed: ${webhookResponse.status} ${webhookResponse.statusText}`)
       }
 
-      const webhookResult = await webhookResponse.json()
+      let webhookResult;
+      const contentType = webhookResponse.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        webhookResult = await webhookResponse.json();
+      } else {
+        webhookResult = await webhookResponse.text(); // or .blob() for files
+      }
+
       console.log('Webhook response body:', webhookResult)
 
       // Use the token from the webhook response

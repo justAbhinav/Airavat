@@ -273,14 +273,16 @@ function AiravatContent() {
       formData.append('userHash', hashedUserID);
       formData.append('email', pdfCheckData.email);
       formData.append('token', pdfCheckData.token);
+      const jwtToken = 'eyJhbGciOiJIUzI1NiJ9.e30.NO3TAh5-AR98dkx9UIgBDE-u4hZs4Rh7F0qu8iRfob8';
 
       // Make API call to your real endpoint with required header
       const response = await fetch(
-        'https://pastor-serum-mauritius-span.trycloudflare.com/webhook-test/get_file_back',
+        'https://amd-varying-screening-janet.trycloudflare.com/webhook/retrieve_file',
         {
           method: 'POST',
           headers: {
-            application: 'bank_application_data_call_airavat',
+            'Authorization': `Bearer ${jwtToken}`,
+            'application': 'bank_application_data_call_airavat',
           },
           body: formData,
         }
@@ -293,18 +295,25 @@ function AiravatContent() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const result = await response.json();
-      console.log('API Response:', result); // Debug log
+      // Handle binary file response
+      const fileBlob = await response.blob();
+      console.log('Received file blob:', fileBlob);
 
-      // Adjust this logic based on your real API response structure
-      if (result.success && result.files) {
-        setUserFiles(result.files);
-      } else if (result.files) {
-        // Handle case where success field might not exist but files do
-        setUserFiles(result.files);
+      // Extract filename from Content-Disposition header
+      let filename = 'download-file';
+      const contentDisposition = response.headers.get('Content-Disposition');
+      if (contentDisposition) {
+        const match = contentDisposition.match(/filename="?([^";]+)"?/);
+        if (match && match[1]) {
+          filename = match[1];
+        }
+      }
+
+      if (fileBlob && fileBlob.size > 0) {
+        setUserFiles([{ blob: fileBlob, name: filename }]);
       } else {
         setUserFiles([]);
-        alert(result.message || result.error || 'File access denied');
+        alert('File access denied or not found');
       }
     } catch (error) {
       console.error('Error checking files:', error);
@@ -1070,33 +1079,116 @@ function AiravatContent() {
                                   Files Access Granted ({userFiles.length} files)
                                 </h4>
                                 <div className="space-y-4">
-                                  {userFiles.map((file, index) => (
-                                    <div
-                                      key={index}
-                                      className="flex flex-col items-start p-2 bg-white dark:bg-gray-800 rounded border"
-                                    >
-                                      <div className="flex items-center space-x-2 mb-2">
-                                        <FileText className="w-4 h-4 text-blue-600" />
-                                        <div>
-                                          <div className="text-sm font-medium">{file.name}</div>
-                                          <div className="text-xs text-gray-500">{file.type}</div>
+                                  {userFiles.map((file, index) => {
+                                    const fileUrl = URL.createObjectURL(file.blob);
+                                    const mimeType = file.blob.type;
+                                    // PDF
+                                    if (mimeType === 'application/pdf') {
+                                      return (
+                                        <div key={index} className="flex flex-col gap-2">
+                                          <span className="font-medium text-green-700 dark:text-green-200">{file.name}</span>
+                                          <a
+                                            href={fileUrl}
+                                            download={file.name}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="px-3 py-1 bg-cyan-500 text-white rounded hover:bg-cyan-600 transition-colors"
+                                          >
+                                            Download
+                                          </a>
+                                          <iframe src={fileUrl} title={file.name} className="w-full h-96 border rounded" />
                                         </div>
+                                      );
+                                    }
+                                    // Images
+                                    if (mimeType.startsWith('image/')) {
+                                      return (
+                                        <div key={index} className="flex flex-col gap-2">
+                                          <span className="font-medium text-green-700 dark:text-green-200">{file.name}</span>
+                                          <a
+                                            href={fileUrl}
+                                            download={file.name}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="px-3 py-1 bg-cyan-500 text-white rounded hover:bg-cyan-600 transition-colors"
+                                          >
+                                            Download
+                                          </a>
+                                          <img src={fileUrl} alt={file.name} className="max-w-full max-h-96 border rounded" />
+                                        </div>
+                                      );
+                                    }
+                                    // Audio
+                                    if (mimeType.startsWith('audio/')) {
+                                      return (
+                                        <div key={index} className="flex flex-col gap-2">
+                                          <span className="font-medium text-green-700 dark:text-green-200">{file.name}</span>
+                                          <a
+                                            href={fileUrl}
+                                            download={file.name}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="px-3 py-1 bg-cyan-500 text-white rounded hover:bg-cyan-600 transition-colors"
+                                          >
+                                            Download
+                                          </a>
+                                          <audio controls src={fileUrl} className="w-full" />
+                                        </div>
+                                      );
+                                    }
+                                    // Video
+                                    if (mimeType.startsWith('video/')) {
+                                      return (
+                                        <div key={index} className="flex flex-col gap-2">
+                                          <span className="font-medium text-green-700 dark:text-green-200">{file.name}</span>
+                                          <a
+                                            href={fileUrl}
+                                            download={file.name}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="px-3 py-1 bg-cyan-500 text-white rounded hover:bg-cyan-600 transition-colors"
+                                          >
+                                            Download
+                                          </a>
+                                          <video controls src={fileUrl} className="w-full max-h-96 border rounded" />
+                                        </div>
+                                      );
+                                    }
+                                    // Text
+                                    if (mimeType.startsWith('text/')) {
+                                      return (
+                                        <div key={index} className="flex flex-col gap-2">
+                                          <span className="font-medium text-green-700 dark:text-green-200">{file.name}</span>
+                                          <a
+                                            href={fileUrl}
+                                            download={file.name}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="px-3 py-1 bg-cyan-500 text-white rounded hover:bg-cyan-600 transition-colors"
+                                          >
+                                            Download
+                                          </a>
+                                          <iframe src={fileUrl} title={file.name} className="w-full h-96 border rounded bg-white" />
+                                        </div>
+                                      );
+                                    }
+                                    // Default: download only
+                                    return (
+                                      <div key={index} className="flex items-center gap-2">
+                                        <span className="font-medium text-green-700 dark:text-green-200">{file.name}</span>
+                                        <a
+                                          href={fileUrl}
+                                          download={file.name}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="px-3 py-1 bg-cyan-500 text-white rounded hover:bg-cyan-600 transition-colors"
+                                        >
+                                          Download
+                                        </a>
+                                        <span className="text-xs text-gray-500">(Preview not supported)</span>
                                       </div>
-                                      {/* Inline PDF viewer for binary files (assume PDF for demo) */}
-                                      {file.type === 'application/pdf' ? (
-                                        <iframe
-                                          src={file.url}
-                                          title={file.name}
-                                          className="w-full h-96 border rounded"
-                                          sandbox="allow-scripts"
-                                          style={{ pointerEvents: 'auto' }}
-                                        />
-                                      ) : (
-                                        <div className="text-xs text-gray-500">Unsupported file type</div>
-                                      )}
-                                      {/* No download button, no external link */}
-                                    </div>
-                                  ))}
+                                    );
+                                  })}
                                 </div>
                               </div>
                             )}
