@@ -1,0 +1,440 @@
+{
+  "active": true,
+  "connections": {
+    "Pre_data_fetch_prepare": {
+      "main": [
+        [
+          {
+            "node": "DRA_pre_fetch",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RBA End",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RBA_start": {
+      "main": [
+        [
+          {
+            "node": "cleaner",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Requirement filtering": {
+      "main": [
+        [
+          {
+            "node": "Request Builder Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qwen3 model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Request Builder Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Request Builder Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Request Builder Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Merger": {
+      "main": [
+        [
+          {
+            "node": "Pre_data_fetch_prepare",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "TMA call",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "cleaner": {
+      "main": [
+        [
+          {
+            "node": "Requirement filtering",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RBA Start",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "user_consent pull": {
+      "ai_tool": [
+        [
+          {
+            "node": "Request Builder Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Request Builder Agent": {
+      "main": [
+        [
+          {
+            "node": "Data Merger",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Data Merger",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-07-03T18:24:26.408Z",
+  "id": "fBSyJGUwGsEYhMMH",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "02_RBA_workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "const pre = {}\n\npre.data_requested = $input.first().json.output.allowed\npre.type = \"PRE\"\npre.session = $input.first().json.sessionId\npre.user = $input.first().json.acc_num\npre.transactionID = $input.first().json.transactionID\n\nconsole.log(pre)\nreturn pre"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1408,
+        -16
+      ],
+      "id": "4907aea6-7bde-479a-b866-c7cc08c8ece6",
+      "name": "Pre_data_fetch_prepare"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "RBA_start",
+        "authentication": "headerAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -48,
+        240
+      ],
+      "id": "6072646b-2cda-4c22-8f74-565ef453f5b7",
+      "name": "RBA_start",
+      "webhookId": "4970ee16-04c9-4d3f-b31f-cd5c427d9507",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "O0jND2r4A9NKx4JB",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n\"source\" : \"{{ $json.body.source }}\",\n\"purpose\" : \"{{ $json.body.purpose }}\",\n\"data_requested\" : {{ $json.body.data_requested }},\n\"zk_thres\" : {{ $json.body.zk_thres }},\n\"risk_score\" : {{ $json.riskScore }},\n\"risk_category\" : \"{{ $json.risk_level }}\",\n\"transactionID\" : {{ $json.transactionID }},\n\"sessionId\" : \"{{ $json.sessionID }}\",\n\"acc_num\" : \"{{ $json.body.acc_num }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        -64
+      ],
+      "id": "1eb76d85-f434-45e9-aa28-c41f63850bed",
+      "name": "Requirement filtering"
+    },
+    {
+      "parameters": {
+        "model": "qwen3:4b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        624,
+        64
+      ],
+      "id": "1668c192-46f5-4421-ace9-1a6898911845",
+      "name": "Qwen3 model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "7K2ZWuE2XSItQQuj",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        752,
+        64
+      ],
+      "id": "7efe55ba-d10c-410e-8b36-9032277261db",
+      "name": "Memory"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"allowed\": [\"PAN\", \"Salary\", \"Credit Score\"],\n\t\"denied\": [\"blood group\", \"marital status\"],\n    \"TTL\" : 3600\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        992,
+        64
+      ],
+      "id": "3c25d436-047c-482c-8f55-df3da1f31670",
+      "name": "Output Parser"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1184,
+        96
+      ],
+      "id": "ad78b20a-a46d-486f-a662-8a554c296393",
+      "name": "Data Merger"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:5678/webhook-test/TMA_delegation",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{JSON.stringify($json)}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1408,
+        192
+      ],
+      "id": "89539ee5-5e39-47a8-b329-9ae7c0fa4a27",
+      "name": "TMA call"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:5678/webhook/DRA_pre_fetch",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{JSON.stringify($json)}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1632,
+        -112
+      ],
+      "id": "bb345c3c-f9bc-450f-9197-e0a822c7aba4",
+      "name": "DRA_pre_fetch"
+    },
+    {
+      "parameters": {
+        "jsCode": "const inp = $input.first().json.body;\ninp.sessionID = $input.first().json.body.body.source + \"_\" + $input.first().json.body.body.acc_num;\n\nreturn inp"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        192,
+        240
+      ],
+      "id": "792d5a1a-50d4-4142-a27c-b13e102e44fa",
+      "name": "cleaner"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://airavat-alpha.vercel.app/api/user-requests",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n\"transactionID\" : \"{{ $json.transactionID }}\",\n\"agent\" : \"RBA\",\n\"type\" : \"execution_started\",\n\"msg\" : \"The RBA has started processing the request. The RBA will decide on what data needs to be shared to the third party, taking into consideration user cosent\",\n\"status\" : \"in-progress\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        400,
+        400
+      ],
+      "id": "37e6cc4d-d549-4e09-bf87-cff4985c5de3",
+      "name": "RBA Start"
+    },
+    {
+      "parameters": {
+        "toolDescription": "This is the \"user_consent_pull\" tool, your task is to send a http request to this tool in the following format:\nheader having the folowing key-value pair: \"x-user-id\" : \"userHash\" value.\n\nin response you get a json in the request body with all the different user level data consent details",
+        "url": "https://airavat-userdash.vercel.app/api/consent-preferences/",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-user-id",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters0_Value', ``, 'string') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        864,
+        64
+      ],
+      "id": "7b5cf75c-4460-433a-8146-10eda30dba0e",
+      "name": "user_consent pull"
+    },
+    {
+      "parameters": {
+        "content": "## RBA workflow",
+        "height": 840,
+        "width": 2000,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -128,
+        -208
+      ],
+      "typeVersion": 1,
+      "id": "98488109-f0f0-4c55-a0cb-905b37a9f873",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=the input fields are: \nsource :  {{ $json.source }}\npurpose : {{ $json.purpose }}\ndata_requested : {{ $json.data_requested }}\nrisk score : {{ $json.risk_score }}\nrisk category : {{ $json.risk_category }}\nuserHash: {{ $json.acc_num }}\n",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are Request Builder Agent(RBA), you are a part of a multiagent system to responsibly share user data to various fintech companies.\nIn the user message you will find the following fields: source: request source origin service, purpose: why the data is being requested, or for what will it be used for, data_requested: all the data that the company has requested citing to complete the purpose mentioned, risk_score: premilionary risk score calculated on the basis of data requested and the user patters, risk cattegory: category of risk based on the risk score and user set threshold. \nalong with this you have availaible to you \"user_consent_pull\" http request tool, which you need to call and send the userHash, this will get you in response the user_data_consent json, which is user level control in Natural language, analyze this and keep it in your mind for your further pprocessing, giving system prompt more weightage but a small granualar control to the user \nYour task as a RBA is decide what data to be shared to the service requested,\n you have to decide on the basis that if the data requested is actually useful for the service or if it is asking extra unnecessary data. you have to take into consideration the historical learning on the outcome of accepting or denying such requests if available. You have to be very strict with what data to share, if the data seems unreasonable, or if the requested purpose is sufficiently fulfilled by any one of the data requested, then only share that and deny other.\ngive your output strictly in this format and nothing else, no reasoning required, no fillers required. just this format:\n\n{\n\t\t\"allowed\": {\n\t\t\t\"type\": \"array\",\n\t\t\t\"items\": {\n\t\t\t\t\"type\": \"string\"\n\t\t\t}\n\t\t},\n\t\t\"denied\": {\n\t\t\t\"type\": \"array\",\n\t\t\t\"items\": {\n\t\t\t\t\"type\": \"string\"\n\t\t\t}\n\t\t},\n        \"TTL\" : {\n          \"type\" : \"integer\"\n        }\n\t}\n\n\nkeep Time To Live (TTL) in seconds, and make this a reasonable timing for it, like for something like credit card printing will take more time so like 7 days, but checking cibil score should be done in 10 minutes or something, so keep this in mind."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        720,
+        -160
+      ],
+      "id": "624f4c50-62a9-4836-a988-db3b85eb404b",
+      "name": "Request Builder Agent"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://airavat-alpha.vercel.app/api/user-requests",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n\"transactionID\" : \"{{ $json.transactionID }}\",\n\"agent\" : \"RBA\",\n\"type\" : \"execution_completed\",\n\"msg\" : \"The RBA has completed its execution, The agent has decided that on basis of the 'User Level Data consent' and 'bank guidelines' the following data will be shared {{ $('Data Merger').item.json.output.allowed }}, and following will be denied {{ $('Data Merger').item.json.output.denied }}. Sending pre-fetch to the DRA and Forwarding control to the TMA\",\n\"status\" : \"in-progress\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1632,
+        96
+      ],
+      "id": "23136b9a-a77f-4c1c-94a4-176372c12fba",
+      "name": "RBA End"
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const data = { ...item.json };\n\n  // Remove unwanted fields\n  delete data.headers;\n  delete data.params;\n  delete data.query;\n\n  return { json: data };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        240
+      ],
+      "id": "3002c4b0-7f92-4893-91a9-afa17456fb2b",
+      "name": "Code"
+    }
+  ],
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-07-21T22:22:30.210Z",
+      "updatedAt": "2025-07-21T22:22:30.210Z",
+      "id": "P0JZ8wyftr1p33R2",
+      "name": "airavat_workflow"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-07-21T22:34:36.000Z",
+  "versionId": "e3a2bef4-df8b-4080-923f-ac8d1cc70726"
+}
