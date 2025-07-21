@@ -1,0 +1,392 @@
+{
+  "active": true,
+  "connections": {
+    "ZKA_offering_webhook": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ZK_Delegation": {
+      "main": [
+        [
+          {
+            "node": "ZK agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "ZKA Start",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "ZK agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ZK_prove_api_endpoint": {
+      "ai_tool": [
+        [
+          {
+            "node": "ZK agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ],
+      "main": [
+        []
+      ]
+    },
+    "ZK agent": {
+      "main": [
+        [
+          {
+            "node": "Code format",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code format": {
+      "main": [
+        [
+          {
+            "node": "Respond to ZK_delegation",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "ZKA end",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "ZK agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-07-06T16:30:26.235Z",
+  "id": "iYyWQY5T3WCL0huZ",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "05_ZKBA_workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "what_can_ZKA_do",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1424,
+        -240
+      ],
+      "id": "46f83c39-28b8-4e89-9a83-baf9cf017c9d",
+      "name": "ZKA_offering_webhook",
+      "webhookId": "529563e7-0826-4de9-b913-f914d90405ec"
+    },
+    {
+      "parameters": {
+        "jsCode": "const response = {}\nresponse.zk_avail = [\"cibil score\", \"salary\"]\n\nreturn response"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1200,
+        -240
+      ],
+      "id": "97bceea5-2cd4-4815-9005-08f5bd745908",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -976,
+        -240
+      ],
+      "id": "3d18d38d-9c5e-4528-ae1e-6e769772bbc5",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ZKA_delegation",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1616,
+        336
+      ],
+      "id": "ddb9aaff-ecd0-4c52-8d40-46c02a0952e3",
+      "name": "ZK_Delegation",
+      "webhookId": "248f6a3b-00f7-40d1-81d2-a3ec73394951"
+    },
+    {
+      "parameters": {
+        "model": "qwen3:1.7b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -1408,
+        304
+      ],
+      "id": "846e498e-5d5b-48bd-af1e-81bf97bc8fa3",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "7K2ZWuE2XSItQQuj",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "This is ZK_prove_api_endpoint, you use this to prove anything by zero knowledge, you need to dynamically fill in the URL from the folowing:\n\n https://airavat-dydo.onrender.com/verify-cibil\n https://airavat-dydo.onrender.com/verify-salary\n\nand fill in the data in the body for the following : \"userHash\" , \"threshold\"",
+        "method": "POST",
+        "url": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('URL', ``, 'string') }}",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Body', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        -1168,
+        304
+      ],
+      "id": "f4fd4a87-d44f-429a-864b-89ea58ac5594",
+      "name": "ZK_prove_api_endpoint",
+      "retryOnFail": true,
+      "waitBetweenTries": 300,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=the available data is:\n\"data_point\" :  {{ $json.body.data_point }} ,\n\"userHash\" : {{ $json.body.user }} ,\n\"threshold\" : {{ $json.body.value }} ,\n\"transactionID\" : {{ $json.body.transaction_ID }} , \n\"sessionID\" : {{ $json.body.sessionID }} ",
+        "options": {
+          "systemMessage": "You are The Zero Knowledge Agent (ZKA) one of the agent of a multiagent system for data protection and privacy.\nYour specific task is to complete the zero knowledge proofs and return them to the user.\nYou will receive in the user message following fields, \"data_point\": the point that is needed to be proven by zero knowledge, \"userHash\" : the hashed value of userID to index the user, \"threshold\" : \"the data point threshold value\", \"tranactionID\" : unique transaction identifier.\n\nNow one you recieve the data you call the ZK_prove API, using the ZK_prove_api_endpoint tool availaible to you as a tool, you need fill in the request, url, body and headers according to the following format:\n\ncurl -X POST https://airavat-dydo.onrender.com/verify-cibil \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"userHash\":\"<user_hash>\", \"threshold\":700}'\n\n\ncurl -X POST https://airavat-dydo.onrender.com/verify-salary \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"userHash\":\"<user_hash>\", \"threshold\":1500}'\n\n\nonce you get the response from the tool, output only that as your final output no fillers nothing.\n\noutput in this format:\n\n{ \"data\" : value you recieved }\n\n\nin case you dont get the response from the tool, retry 3 times till you get a response\n\nBefore using the tool check the memory, if the data for the same user for the mentioned threshold is available and it is recent, in the memory send that instead of again calling the tool, if the data is stale use the tool. but make sure that you keep in mind that the data threshold and the data_point is in the current request"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -1360,
+        80
+      ],
+      "id": "92713dee-3b1d-4e45-8bb1-54b15c3c60d4",
+      "name": "ZK agent"
+    },
+    {
+      "parameters": {
+        "jsCode": "const inp = $input.first().json.output\n\nconst res = JSON.parse(inp.replace(/<think>.*?<\\/think>/gs,'').trim())\n\n\nconst out ={\"user\" : $('ZK_Delegation').first().json.body.user,\n           \"zk_res\" : res.data}\n\nreturn out"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -960,
+        192
+      ],
+      "id": "3f26700f-fbc4-4651-b5f5-afeb58690155",
+      "name": "Code format"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -528,
+        80
+      ],
+      "id": "7668c431-d195-4442-9545-d85ce3df6a3d",
+      "name": "Respond to ZK_delegation"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://airavat-alpha.vercel.app/api/user-requests",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n\"transactionID\" : \"{{ $json.body.transaction_ID }}\",\n\"agent\" : \"ZBKA\",\n\"type\" : \"execution_started\",\n\"msg\" : \"The ZKA has recieved the request for a Zero Knowledge trust build, starting the building process\",\n\"status\" : \"in-progress\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1280,
+        480
+      ],
+      "id": "b6578b08-86a4-4cae-a85d-3b1ff13ccbdf",
+      "name": "ZKA Start"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://airavat-alpha.vercel.app/api/user-requests",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n\"transactionID\" : \"{{ $json.body.transaction_ID }}\",\n\"agent\" : \"ZBKA\",\n\"type\" : \"execution_completed\",\n\"msg\" : \"The ZKA has successfully completed the Zero Knowledge Authentication.\",\n\"status\" : \"in-progress\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -528,
+        288
+      ],
+      "id": "35557738-9a88-476e-b4b6-c41cb598e42a",
+      "name": "ZKA end"
+    },
+    {
+      "parameters": {
+        "content": "## ZBKA Workflow",
+        "height": 660,
+        "width": 1400,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1664,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "503e0016-0f7f-47cf-bbb0-7bf01e946884",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## ZK offering mail",
+        "height": 240,
+        "width": 780,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1520,
+        -320
+      ],
+      "typeVersion": 1,
+      "id": "641c80e4-0c4f-41d0-9201-9342b6d750f5",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch",
+        "useDataOfInput": 2
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -736,
+        384
+      ],
+      "id": "e5658153-ca1d-4c48-8e3d-679d701f21e3",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.body.sessionID }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1280,
+        272
+      ],
+      "id": "0f28d971-2943-4e97-92fa-0ed76cea2da5",
+      "name": "Simple Memory",
+      "disabled": true
+    }
+  ],
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-07-21T22:22:30.210Z",
+      "updatedAt": "2025-07-21T22:22:30.210Z",
+      "id": "P0JZ8wyftr1p33R2",
+      "name": "airavat_workflow"
+    }
+  ],
+  "triggerCount": 2,
+  "updatedAt": "2025-07-21T22:36:02.000Z",
+  "versionId": "4845ad6c-8f77-4042-a5e8-53a8e278a396"
+}
