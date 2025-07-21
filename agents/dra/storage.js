@@ -97,16 +97,12 @@ app.get("/data", async (req, res) => {
         .from("airavat-storage")
         .download(data.file_path);
     if (dlErr) throw dlErr;
-    // const { publicUrl, error: urlError } = await supabase.storage
-    //   .from("airavat-storage")
-    //   .getPublicUrl(data.file_path); // expires in 120s
-    // if (urlError) throw urlError;
 
     // 3) Return metadata + URL
     res.set({
         "Content-Type": fileData.type || "application/octet-stream",
         "Content-Disposition": `attachment; filename="${data.filename}"`,
-        "userHassh" : data.user_hash,
+        "userHash" : data.user_hash,
         "email": data.email,
         "clientTimestamp": data.client_timestamp,
         "ttl": data.ttl,
