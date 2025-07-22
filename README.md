@@ -8,6 +8,8 @@
   - [Table of Contents](#table-of-contents)
   - [Overview](#overview)
   - [Architecture](#architecture)
+    - [🔷 **System Architecture**](#-system-architecture)
+    - [🔶 **Micro-Architecture**](#-micro-architecture)
   - [Components](#components)
   - [Directory Structure](#directory-structure)
   - [Setup](#setup)
@@ -37,6 +39,19 @@ Airavat employs a multi-agent system where each agent performs a specific role i
 - **Output Control Agent (OCA)**: Formats and delivers responses.
 - **Time-Lock Server Agent (TLSA)**: Performs secondary risk checks for the Time-Lock Server.
 - **Time-Lock Server (TLS)**: Stores data with time-bound access.
+
+Below are two diagrams that illustrate Airavat’s architecture from both a system-wide and agent-level perspective.
+### 🔷 **System Architecture**
+
+![System Architecture](documentation/images/system_arch.png)
+
+This diagram provides a high-level view of how different components (user dashboard, bank dashboard, agents, blockchain, etc.) interact within the Airavat ecosystem.
+
+### 🔶 **Micro-Architecture**
+
+**[📄 View Micro-Architecture Diagram (PDF)](documentation/images/micro_arch.pdf)**
+
+This detailed PDF outlines internal agent interactions, data flow logic, and privacy-preserving protocol layers.
 
 ## Components
 
