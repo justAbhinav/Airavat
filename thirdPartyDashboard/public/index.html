@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Request Simulation Dashboard Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Ensure JWT library loads before dashboard.js -->
+    <script src="https://cdn.jsdelivr.net/npm/jsrsasign@11.1.0/lib/jsrsasign.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="dashboard.css" />
+  </head>
+  <body
+    class="text-gray-200 min-h-screen flex flex-col justify-center items-center"
+  >
+    <div class="container mx-auto px-4 py-8">
+      <header class="text-center mb-10">
+        <h1 class="text-4xl font-bold text-white mb-2">
+          Request Simulation Dashboard
+        </h1>
+        <p class="text-gray-400 text-lg">
+          Interact with the AIRAVAT system in real time, as a third party.
+        </p>
+      </header>
+      <main class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <!-- Submit Task Panel -->
+        <section
+          aria-labelledby="submit-task-title"
+          class="bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-700 flex flex-col"
+        >
+          <h2
+            id="submit-task-title"
+            class="text-2xl font-semibold mb-6 text-white flex items-center gap-2"
+          >
+            <span aria-hidden="true">📤</span> Submit a New Task
+          </h2>
+          <form
+            id="submit-form"
+            autocomplete="off"
+            class="flex-1 flex flex-col justify-between"
+          >
+            <div class="space-y-6">
+              <div>
+                <label
+                  for="json-payload"
+                  class="block text-sm font-medium text-gray-300 mb-2"
+                  >JSON Payload</label
+                >
+                <textarea
+                  id="json-payload"
+                  rows="8"
+                  class="w-full p-3 bg-gray-900 border border-gray-600 rounded-md text-gray-200 resize-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                  aria-label="Task JSON payload"
+                ></textarea>
+              </div>
+              <div class="flex items-center mb-2">
+                <input
+                  type="checkbox"
+                  id="create-webhook-checkbox"
+                  class="form-checkbox"
+                  aria-checked="false"
+                />
+                <label
+                  for="create-webhook-checkbox"
+                  class="ml-2 text-sm font-medium text-gray-300"
+                  >Automatically create and use a webhook</label
+                >
+              </div>
+              <div class="flex items-center mt-2">
+                <label
+                  for="jwt-secret-input"
+                  class="text-sm font-medium text-gray-300 mr-2"
+                  >JWT Secret (demo):</label
+                >
+                <input
+                  type="text"
+                  id="jwt-secret-input"
+                  placeholder="abbajabbadabba"
+                  class="p-2 bg-gray-900 border border-gray-600 rounded-md text-gray-200 w-64"
+                />
+              </div>
+            </div>
+            <div class="mt-8">
+              <button
+                type="submit"
+                id="submit-button"
+                class="w-full flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md transition duration-300 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <span id="submit-button-text">🚀 Submit Task</span>
+                <div
+                  id="submit-spinner"
+                  class="spinner hidden ml-2"
+                  aria-live="polite"
+                ></div>
+              </button>
+            </div>
+          </form>
+        </section>
+        <!-- Check Status Panel -->
+        <section
+          aria-labelledby="check-status-title"
+          class="bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-700 flex flex-col"
+        >
+          <h2
+            id="check-status-title"
+            class="text-2xl font-semibold mb-6 text-white flex items-center gap-2"
+          >
+            <span aria-hidden="true">🔍</span> Check Job Status
+          </h2>
+          <form
+            id="status-form"
+            class="flex items-center gap-4 mb-6"
+            autocomplete="off"
+          >
+            <input
+              type="text"
+              id="job-id-input"
+              placeholder="Enter Job ID"
+              class="flex-grow p-3 bg-gray-900 border border-gray-600 rounded-md text-gray-200 focus:ring-2 focus:ring-blue-500 transition duration-200"
+              aria-label="Job ID"
+            />
+            <button
+              type="submit"
+              id="status-button"
+              class="flex items-center justify-center bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <span id="status-button-text">Check</span>
+              <div
+                id="status-spinner"
+                class="spinner hidden ml-2"
+                aria-live="polite"
+              ></div>
+            </button>
+          </form>
+          <div id="response-container" class="mt-4">
+            <div class="bg-gray-900 p-4 rounded-md text-center text-gray-500">
+              <p>Results will be displayed here.</p>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script src="dashboard.js"></script>
+  </body>
+</html>

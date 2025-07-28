@@ -213,3 +213,8 @@ docker/
 agents/vra/testing
 agents/vra/risk_asses_model.py
 agents/dra/node_modules
+
+data_generation
+agents/exposedAPIEndpoint/tskQ
+thirdPartyDashboard/node_modules
+agents/exposedAPIEndpoint/dummy_webhook_reciever.py

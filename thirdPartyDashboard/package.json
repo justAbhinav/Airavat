@@ -1,0 +1,12 @@
+{
+  "name": "exposedAPIEndpoint-dashboard",
+  "version": "1.0.0",
+  "description": "Node.js Express server for Async Task Dashboard UI",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

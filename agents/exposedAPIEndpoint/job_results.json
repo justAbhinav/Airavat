@@ -1,0 +1,236 @@
+{
+    "3638a6df-90f3-40af-9056-2be55fa99d38": {
+        "status": "completed",
+        "result": {
+            "confirmation_id": "conf_1753739184",
+            "notes": "This response came from the dummy service at localhost:5678.",
+            "original_payload": {
+                "acc_num": "6025d18fe48abd45168528f18a82e265dd98d421a7084aa09f61b341703901a3",
+                "data_requested": [
+                    "account_balance",
+                    "transaction_history",
+                    "salary",
+                    "Address",
+                    "Aadhar Number",
+                    "cibil_score"
+                ],
+                "purpose": "To check user cibil_score",
+                "source": "Higfi Fintech",
+                "zk_thres": {
+                    "account_balance": 1000000,
+                    "cibil_score": 750
+                }
+            },
+            "status": "PROCESSED"
+        },
+        "timestamp": 1753739184.5122755
+    },
+    "18b0fd9c-42e6-45a6-8f09-821a95d31d60": {
+        "status": "completed",
+        "result": {
+            "confirmation_id": "conf_1753739194",
+            "notes": "This response came from the dummy service at localhost:5678.",
+            "original_payload": {
+                "acc_num": "6025d18fe48abd45168528f18a82e265dd98d421a7084aa09f61b341703901a3",
+                "data_requested": [
+                    "account_balance",
+                    "transaction_history",
+                    "salary",
+                    "Address",
+                    "Aadhar Number",
+                    "cibil_score"
+                ],
+                "purpose": "To check user cibil_score",
+                "source": "Higfi Fintech",
+                "zk_thres": {
+                    "account_balance": 1000000,
+                    "cibil_score": 750
+                }
+            },
+            "status": "PROCESSED"
+        },
+        "timestamp": 1753739194.4058857
+    },
+    "45a947dd-458c-4b95-bc57-46f87aa327cf": {
+        "status": "completed",
+        "result": {
+            "confirmation_id": "conf_1753739212",
+            "notes": "This response came from the dummy service at localhost:5678.",
+            "original_payload": {
+                "acc_num": "6025d18fe48abd45168528f18a82e265dd98d421a7084aa09f61b341703901a3",
+                "data_requested": [
+                    "account_balance",
+                    "transaction_history",
+                    "salary",
+                    "Address",
+                    "Aadhar Number",
+                    "cibil_score"
+                ],
+                "purpose": "To check user cibil_score",
+                "source": "Higfi Fintech",
+                "zk_thres": {
+                    "account_balance": 1000000,
+                    "cibil_score": 750
+                }
+            },
+            "status": "PROCESSED"
+        },
+        "timestamp": 1753739212.588903
+    },
+    "12d2ab61-bea8-4db7-a6a0-a0f96f75cfbc": {
+        "status": "completed",
+        "result": {
+            "confirmation_id": "conf_1753739313",
+            "notes": "This response came from the dummy service at localhost:5678.",
+            "original_payload": {
+                "acc_num": "6025d18fe48abd45168528f18a82e265dd98d421a7084aa09f61b341703901a3",
+                "data_requested": [
+                    "account_balance",
+                    "transaction_history",
+                    "salary",
+                    "Address",
+                    "Aadhar Number",
+                    "cibil_score"
+                ],
+                "purpose": "To check user cibil_score",
+                "source": "Higfi Fintech",
+                "zk_thres": {
+                    "account_balance": 1000000,
+                    "cibil_score": 750
+                }
+            },
+            "status": "PROCESSED"
+        },
+        "timestamp": 1753739313.9627347
+    },
+    "bd411836-92b0-49e5-95fc-6668bb0c1942": {
+        "status": "completed",
+        "result": {
+            "confirmation_id": "conf_1753739353",
+            "notes": "This response came from the dummy service at localhost:5678.",
+            "original_payload": {
+                "acc_num": "6025d18fe48abd45168528f18a82e265dd98d421a7084aa09f61b341703901a3",
+                "data_requested": [
+                    "account_balance",
+                    "transaction_history",
+                    "salary",
+                    "Address",
+                    "Aadhar Number",
+                    "cibil_score"
+                ],
+                "purpose": "To check user cibil_score",
+                "source": "Higfi Fintech",
+                "zk_thres": {
+                    "account_balance": 1000000,
+                    "cibil_score": 750
+                }
+            },
+            "status": "PROCESSED"
+        },
+        "timestamp": 1753739353.0265355
+    },
+    "db3ad729-62d0-461e-bd33-a9ab2a1c692b": {
+        "status": "completed",
+        "result": {
+            "confirmation_id": "conf_1753739360",
+            "notes": "This response came from the dummy service at localhost:5678.",
+            "original_payload": {
+                "acc_num": "6025d18fe48abd45168528f18a82e265dd98d421a7084aa09f61b341703901a3",
+                "data_requested": [
+                    "account_balance",
+                    "transaction_history",
+                    "salary",
+                    "Address",
+                    "Aadhar Number",
+                    "cibil_score"
+                ],
+                "purpose": "To check user cibil_score",
+                "source": "Higfi Fintech",
+                "zk_thres": {
+                    "account_balance": 1000000,
+                    "cibil_score": 750
+                }
+            },
+            "status": "PROCESSED"
+        },
+        "timestamp": 1753739360.1172502
+    },
+    "792e59ee-7dae-4149-8dd8-8804b2e013f4": {
+        "status": "completed",
+        "result": {
+            "confirmation_id": "conf_1753739554",
+            "notes": "This response came from the dummy service at localhost:5678.",
+            "original_payload": {
+                "acc_num": "6025d18fe48abd45168528f18a82e265dd98d421a7084aa09f61b341703901a3",
+                "data_requested": [
+                    "account_balance",
+                    "transaction_history",
+                    "salary",
+                    "Address",
+                    "Aadhar Number",
+                    "cibil_score"
+                ],
+                "purpose": "To check user cibil_score",
+                "source": "Higfi Fintech",
+                "zk_thres": {
+                    "account_balance": 1000000,
+                    "cibil_score": 750
+                }
+            },
+            "status": "PROCESSED"
+        },
+        "timestamp": 1753739554.764005
+    },
+    "53d90e6d-8b60-43b9-acaf-2ded072d1d0d": {
+        "status": "completed",
+        "result": {
+            "confirmation_id": "conf_1753739600",
+            "notes": "This response came from the dummy service at localhost:5678.",
+            "original_payload": {
+                "acc_num": "6025d18fe48abd45168528f18a82e265dd98d421a7084aa09f61b341703901a3",
+                "data_requested": [
+                    "account_balance",
+                    "transaction_history",
+                    "salary",
+                    "Address",
+                    "Aadhar Number",
+                    "cibil_score"
+                ],
+                "purpose": "To check user cibil_score",
+                "source": "Higfi Fintech",
+                "zk_thres": {
+                    "account_balance": 1000000,
+                    "cibil_score": 750
+                }
+            },
+            "status": "PROCESSED"
+        },
+        "timestamp": 1753739600.8126645
+    },
+    "ddc7ad89-f581-4308-9bc9-3f094fdb92ff": {
+        "status": "completed",
+        "result": {
+            "confirmation_id": "conf_1753739623",
+            "notes": "This response came from the dummy service at localhost:5678.",
+            "original_payload": {
+                "acc_num": "6025d18fe48abd45168528f18a82e265dd98d421a7084aa09f61b341703901a3",
+                "data_requested": [
+                    "account_balance",
+                    "transaction_history",
+                    "salary",
+                    "Address",
+                    "Aadhar Number",
+                    "cibil_score"
+                ],
+                "purpose": "To check user cibil_score",
+                "source": "Higfi Fintech",
+                "zk_thres": {
+                    "account_balance": 1000000,
+                    "cibil_score": 750
+                }
+            },
+            "status": "PROCESSED"
+        },
+        "timestamp": 1753739623.7141256
+    }
+}
