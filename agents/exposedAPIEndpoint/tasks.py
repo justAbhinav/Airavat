@@ -49,7 +49,7 @@ def process_heavy_task(task_data, respond_back_url=None):
     try:
         external_webhook_url = 'http://localhost:5678/webhook/vra-webhook'
         print(f"Calling external webhook: {external_webhook_url}")
-        response = requests.post(external_webhook_url, json=task_data, timeout=60)
+        response = requests.post(external_webhook_url, json=task_data, timeout=600)
         response.raise_for_status()
         final_result = response.json()
         status = 'completed'

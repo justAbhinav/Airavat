@@ -42,7 +42,7 @@ function generateJWT(payload) {
 
 document.addEventListener("DOMContentLoaded", () => {
   const defaultPayload = {
-    source: "Higfi Fintech",
+    source: "Airavat Fintech",
     purpose: "To check user cibil_score",
     data_requested: [
       "account_balance",

@@ -218,3 +218,4 @@ data_generation
 agents/exposedAPIEndpoint/tskQ
 thirdPartyDashboard/node_modules
 agents/exposedAPIEndpoint/dummy_webhook_reciever.py
+agents/exposedAPIEndpoint/job_results.json
